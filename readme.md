@@ -129,3 +129,27 @@ else:             answer = a + 2      // cannot add 'a' (breaks MEX), need two n
 - **Aha moment**: MEX constraint blocks one specific value — check if your "fix number" is that blocked value
 
 ---
+
+### Longest Common Substring (LCSUB)
+```cpp
+// dp[i][j] = length of common substring ending at a[i-1] and b[j-1]
+int ml = 0;
+for (int i = 1; i <= m; i++) {
+    for (int j = 1; j <= n; j++) {
+        if (a[i-1] == b[j-1]) {
+            dp[i][j] = dp[i-1][j-1] + 1;
+            ml = max(ml, dp[i][j]);
+        }
+        else dp[i][j] = 0;  // reset (contiguous required!)
+    }
+}
+```
+- **Problem**: `Double_ended_Strings_1506C.cpp`
+- **When to use**: Minimum deletions to make two strings equal by removing from ends only
+- **Why it works**: Keep the longest *contiguous* matching part → delete everything else from both strings
+- **Answer formula**: `(len(a) - ml) + (len(b) - ml)`
+- **Critical detail**: Reset to `0` on mismatch (unlike LCS which carries max from left/top) — we need *contiguous* match
+
+---
+
+> 💡 **Pattern name**: This is **Longest Common Substring** (not to be confused with Longest Common Subsequence). The `dp[i][j] = 0` on mismatch is the key difference.
