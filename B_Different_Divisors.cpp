@@ -197,22 +197,49 @@ long long xor_till(long long n)
     else
         return 0;
 }
-void solve()
+// Returns list of primes up to n,
+vl sieve(int n)
 {
-    ll n, ans = 1;
-    cin >> n;
-    for (int i = 1; i <= 2; i++)
+    vl prime, mark(n + 1, 1);
+    mark[0] = mark[1] = 0;
+    for (int i = 2; i <= n; i++)
     {
-        ans += n;
+        if (mark[i])
+        {
+            prime.pb(i);
+            if ((ll)i * i <= n)
+                for (int j = i * i; j <= n; j += i)
+                    mark[j] = 0;
+        }
     }
-    cout << ans * (ans - n) << endl;
+    return prime;
 }
 
+void solve()
+{
+    static const vl v = sieve(1e7);
+
+    int t;
+    cin >> t;
+
+    while (t--)
+    {
+        ll n;
+        cin >> n;
+
+        auto f = lower_bound(all(v), n + 1);
+        ll fv = *f;
+        auto s = lower_bound(all(v), n + fv);
+        ll sv = *s;
+
+        cout << fv * sv << endl;
+    }
+}
 int main()
 {
     fastio;
-    int t = 1;
-    cin >> t;
-    rep(i, 0, t) solve();
+    // int t = 1;
+    // cin >> t;
+    solve();
     return 0;
 }
