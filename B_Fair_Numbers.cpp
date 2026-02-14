@@ -221,7 +221,7 @@ void solve()
             {
                 f = 0;
                 s.clear();
-                s =  stoull(s);
+                s = to_string(++m);
                 break;
             }
             f = 1;
