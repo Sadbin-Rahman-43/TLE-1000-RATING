@@ -1,0 +1,261 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// ============================= TYPEDEFS ===============================
+// Common type aliases for competitive programming
+using ll = long long;           // 64-bit integer
+using ull = unsigned long long; // Unsigned 64-bit
+using ld = long double;         // High precision float
+using pii = pair<int, int>;     // Pair of integers
+using pll = pair<ll, ll>;       // Pair of long longs
+using vi = vector<int>;         // Vector of ints
+using vl = vector<ll>;          // Vector of long longs
+using vvi = vector<vi>;         // 2D vector of ints
+using vvl = vector<vl>;         // 2D vector of long longs
+using vpii = vector<pii>;       // Vector of pairs
+using str = string;             // Shorter string alias
+template <class T>
+using pqg = priority_queue<T, vector<T>, greater<T>>; // Min-heap
+template <class T>
+using pqm = priority_queue<T>; // Max-heap (default)
+
+// ============================= CONSTANTS ================================
+#define endl "\n"                       // Faster than std::endl (no flush)
+static constexpr ll LINF = (ll)4e18;    // Large infinity for ll
+static constexpr int INFi = 2e9;        // Large infinity for int
+static constexpr ll MOD = 1000000007LL; // Common prime modulus
+static constexpr ll MOD2 = 998244353LL; // Another common prime modulus
+static constexpr int MAXN = 200010;     // Common array size limit
+static constexpr int LOG = 20;          // log2(1e6) ~ 20, for sparse tables / binary lifting
+static constexpr double EPS = 1e-10;    // Floating point comparison tolerance
+
+// =============================== MACROS =================================
+#define rep(i, a, n) for (int i = (a); i < (n); i++)      // Loop from a to n-1
+#define repan(i, a, n) for (int i = (a); i <= (n); i++)   // Loop from a to n (inclusive)
+#define per(i, a, n) for (int i = (n) - 1; i >= (a); i--) // Reverse loop
+#define pb push_back
+#define eb emplace_back // Faster than push_back
+#define ff first
+#define ss second
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+#define sz(x) ((int)(x).size())
+#define each(x, v) for (auto &x : v)       // Range-based for loop
+#define mset(a, v) memset(a, v, sizeof(a)) // Fast array initialization
+#define sb(v) sort(all(v))                 // Sort ascending
+#define bs(v) sort(rall(v))                // Sort descending
+#define rs(v) reverse(all(v))              // Reverse vector
+// Remove duplicates
+#define uniq(v)   \
+    sort(all(v)); \
+    v.erase(unique(all(v)), v.end())
+// Ultra-fast 2D vector creation (replaces make2d function)
+#define vvii(rows, cols, val) vvi(rows, vi(cols, val))
+#define vvll(rows, cols, val) vvl(rows, vl(cols, val))
+#define fastio                   \
+    ios::sync_with_stdio(false); \
+    cin.tie(nullptr);            \
+    cout.tie(nullptr); // Fast I/O
+
+// =========================== FAST INPUT/OUTPUT ===========================
+// Fast single value read
+template <class T>
+inline void read(T &x) { cin >> x; }
+
+// Fast multiple value read
+template <class T, class... Args>
+inline void read(T &x, Args &...args)
+{
+    cin >> x;
+    read(args...);
+}
+
+// Read entire line after skipping whitespace
+inline str readline()
+{
+    str s;
+    getline(cin >> ws, s);
+    return s;
+}
+
+// Read vector of size n (or full if n=-1)
+template <class T>
+inline void readvec(vector<T> &v, int n = -1)
+{
+    if (n == -1)
+        n = sz(v);
+    rep(i, 0, n) cin >> v[i];
+}
+
+// Read multiple values into a tuple
+template <class... Args>
+inline tuple<Args...> read()
+{
+    tuple<Args...> t;
+    apply([](auto &&...args)
+          { ((cin >> args), ...); }, t);
+    return t;
+}
+
+// Print with optional newline
+template <class T>
+inline void print(const T &x, bool nl = true)
+{
+    cout << x;
+    if (nl)
+        cout << endl;
+}
+
+// Print vector with custom separator
+template <class T>
+inline void printvec(const vector<T> &v, char sep = ' ', bool nl = true)
+{
+    for (int i = 0; i < sz(v); i++)
+    {
+        if (i)
+            cout << sep;
+        cout << v[i];
+    }
+    if (nl)
+        cout << endl;
+}
+
+// Print 2D vector
+template <class T>
+void print2d(const vector<vector<T>> &g)
+{
+    rep(i, 0, sz(g)) printvec(g[i]);
+}
+// Print unordered_map
+template <class K, class V>
+void printmap(const unordered_map<K, V> &mp, char sep = '\n', str kv_sep = ": ", str prefix = "")
+{
+    cout << prefix;
+    int cnt = 0;
+    each(p, mp)
+    {
+        if (cnt++)
+            cout << sep;
+        cout << p.ff << kv_sep << p.ss;
+    }
+    if (sz(mp))
+        cout << endl;
+}
+
+// Print ordered map
+template <class K, class V>
+void printmap(const map<K, V> &mp, char sep = '\n', str kv_sep = ": ", str prefix = "")
+{
+    cout << prefix;
+    int cnt = 0;
+    each(p, mp)
+    {
+        if (cnt++)
+            cout << sep;
+        cout << p.ff << kv_sep << p.ss;
+    }
+    if (sz(mp))
+        cout << endl;
+}
+
+// Common contest output macros
+inline void YES(bool caps = true) { cout << (caps ? "YES\n" : "Yes\n"); }
+inline void NO(bool caps = true) { cout << (caps ? "NO\n" : "No\n"); }
+inline void setprec(int x = 15) { cout << fixed << setprecision(x); }
+
+// =========================== HELPER FUNCTIONS ===========================
+
+// Count frequencies in vector
+template <class T>
+map<T, int> count_freq(const vector<T> &arr)
+{
+    map<T, int> freq;
+    each(x, arr) freq[x]++;
+    return freq;
+}
+
+// Count frequencies with unordered_map (faster)
+template <class T>
+unordered_map<T, int> count_freq_unordered(const vector<T> &arr)
+{
+    unordered_map<T, int> freq;
+    each(x, arr) freq[x]++;
+    return freq;
+}
+ll ceil_division(ll a, ll b)
+{
+    return (a + b - 1) / b;
+}
+// Function to calculate XOR from 0 to n
+long long xor_till(long long n)
+{
+    // Determine the remainder of n when divided by 4
+    long long a = n % 4;
+    // Depending on the remainder, return the appropriate XOR value
+    if (a == 0)
+        return n;
+    else if (a == 1)
+        return 1;
+    else if (a == 2)
+        return n + 1;
+    else
+        return 0;
+}
+void solve()
+{
+    ull a, b, c = 0;
+    cin >> a >> b;
+    if (a < b)
+    {
+        while (a < b)
+        {
+            a = a << 1;
+            c++;
+            // cout << a << endl;
+        }
+    }
+    else if (a > b)
+    {
+        while (a > b)
+        {
+            if (a % 2 == 0)
+            {
+                a = a >> 1;
+                c++;
+            }
+            else if (a % 4 == 0)
+            {
+                a = a >> 2;
+                c++;
+            }
+           else if (a % 8 == 0)
+            {
+                a = a >> 3;
+                c++;
+            }
+            else
+            break;
+        }
+    }
+    if (a != b)
+        cout << -1 << endl;
+
+    else if (c == 0)
+        cout << 0 << endl;
+    else
+    {
+        if (c / 3 == 0)
+            cout << 1 << endl;
+        else
+            cout << ceil_division(c, 3) << endl;
+    }
+}
+
+int main()
+{
+    fastio;
+    int t = 1;
+    cin >> t;
+    rep(i, 0, t) solve();
+    return 0;
+}
